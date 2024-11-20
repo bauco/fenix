@@ -1,0 +1,6 @@
+@fenix.Server_HostAddress = http://localhost:5163
+
+GET {{fenix.Server_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
