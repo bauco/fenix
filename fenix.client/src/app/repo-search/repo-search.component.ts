@@ -6,6 +6,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatPaginator, MatPaginatorModule, PageEvent } from '@angular/material/paginator';
 import { ApiService } from '../services/api.service';
+import { ActivatedRoute, NavigationExtras, Router } from '@angular/router';
 
 @Component({
   selector: 'app-repo-search',
@@ -21,6 +22,9 @@ import { ApiService } from '../services/api.service';
 })
 export class RepoSearchComponent implements OnInit {
   private http = inject(ApiService);
+  private route = inject(ActivatedRoute);
+  private router = inject(Router);
+
   repositories: any = [];
   searchQuery: any;
   paginator = viewChild(MatPaginator);
@@ -36,6 +40,12 @@ export class RepoSearchComponent implements OnInit {
   bookmarks: any[] = [];
 
   ngOnInit() {
+    this.route.queryParams.subscribe(params => {
+      this.searchQuery = params['q']; // Replace 'q' with your actual query parameter name
+      if (this.searchQuery) {
+        this.search(); // Perform search if a query parameter exists
+      }
+    });
     this.getBookmarks();
   }
   search() {
@@ -49,6 +59,12 @@ export class RepoSearchComponent implements OnInit {
           console.log(result);
           this.length = result.total_count
           this.repositories = result.items;
+          // Update the URL with the search query
+          const navigationExtras: NavigationExtras = {
+            queryParams: { q: this.searchQuery },
+            queryParamsHandling: 'merge' // This will preserve existing query parameters
+          };
+          this.router.navigate([], navigationExtras);
         },
         error: (error) => {
           console.error(error.message);
