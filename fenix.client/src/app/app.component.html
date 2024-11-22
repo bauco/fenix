@@ -1,24 +1,18 @@
-﻿<h1 id="tableLabel">Weather forecast</h1>
-
-<p>This component demonstrates fetching data from the server.</p>
-
-<p *ngIf="!forecasts"><em>Loading... Please refresh once the ASP.NET backend has started. See <a href="https://aka.ms/jspsintegrationangular">https://aka.ms/jspsintegrationangular</a> for more details.</em></p>
-
-<table *ngIf="forecasts">
-    <thead>
-        <tr>
-            <th>Date</th>
-            <th>Temp. (C)</th>
-            <th>Temp. (F)</th>
-            <th>Summary</th>
-        </tr>
-    </thead>
-    <tbody>
-        <tr *ngFor="let forecast of forecasts">
-            <td>{{ forecast.date }}</td>
-            <td>{{ forecast.temperatureC }}</td>
-            <td>{{ forecast.temperatureF }}</td>
-            <td>{{ forecast.summary }}</td>
-        </tr>
-    </tbody>
-</table>
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons"
+      rel="stylesheet">
+<mat-toolbar>
+  <span>Fenix</span>
+  <span class="example-spacer"></span>
+  @if(auth.isLoggedIn()){
+    <button [routerLink]="['/repo']" [routerLinkActive]="['is-active']" mat-icon-button class="example-icon" aria-label="Example icon-button with share icon">
+      <span class="material-icons">grid_view</span>
+    </button>
+    <button [routerLink]="['/bookmarks']" [routerLinkActive]="['is-active']" mat-icon-button class="example-icon favorite-icon" aria-label="Example icon-button with heart icon">
+      <span class="material-icons">favorite</span>
+    </button>
+    <button [routerLink]="['/logout']" [routerLinkActive]="['is-active']" mat-icon-button class="example-icon" aria-label="Example icon-button with share icon">
+      <span class="material-icons">logout</span>
+    </button>
+  }
+</mat-toolbar>
+<router-outlet></router-outlet>

@@ -1,0 +1,39 @@
+<div>
+    <mat-form-field appearance="fill">
+      <input matInput [(ngModel)]="searchQuery" (keyup.enter)="search()" placeholder="Search repositories">
+    </mat-form-field>
+    <button mat-button (click)="search()"><span class="material-icons">search</span></button>
+  </div>
+  
+  <div class="gallery">
+    @for(repo of repositories; track repo){
+      <mat-card  class="card" appearance="outlined">
+        <mat-card-header>
+          <img mat-card-avatar [src]="repo.owner.avatar_url" alt="Owner Avatar">
+          <mat-card-title>{{ repo.full_name }}</mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+        </mat-card-content>
+        <mat-card-actions>
+          <button mat-button (click)="bookmark(repo)"><span class="material-icons">{{isBookmarked(repo) ? 'bookmark' : 'bookmark_border' }}</span></button>
+        </mat-card-actions>
+      </mat-card>
+    }
+  </div>
+  @if(length > 0){
+    <mat-paginator #paginator
+                   class="demo-paginator"
+                   (page)="handlePageEvent($event)"
+                   [length]="length"
+                   [pageSize]="pageSize"
+                   [disabled]="disabled"
+                   [showFirstLastButtons]="showFirstLastButtons"
+                   [pageSizeOptions]="showPageSizeOptions ? pageSizeOptions : []"
+                   [hidePageSize]="hidePageSize"
+                   [pageIndex]="pageIndex"
+                   aria-label="Select page">
+    </mat-paginator>
+  }
+<div se>
+
+</div>
