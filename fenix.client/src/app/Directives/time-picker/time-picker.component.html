@@ -1,8 +1,0 @@
-<mat-form-field class="w-100">
-  <mat-label>{{ label }}</mat-label>
-  <mat-select [(value)]="selectedTime" (selectionChange)="onSelection($event)">
-    @for(hour of times; track hour){
-      <mat-option [hidden]="startHour > DateToTime( hour)" [value]="hour">{{ hour | date: 'h:mm a'}}</mat-option>
-    }
-  </mat-select>
-</mat-form-field>

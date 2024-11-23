@@ -67,3 +67,22 @@ export interface ILogInRequest {
     password?: string | undefined;
     version?: string | undefined;
 }
+export interface ILogInResponse {
+  accessToken: string;
+  refreshToken: string;
+  refreshTokenExpiry: Date;
+
+}
+
+export interface IRepository {
+  id: number;
+  full_name: string;
+  owner: IOwner;
+}
+export interface IOwner {
+  avatar_url: string;
+}
+export interface IBookmark {
+  userId: number;
+  gitHubResponseRepositoryId: number;
+ }

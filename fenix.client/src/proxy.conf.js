@@ -5,7 +5,24 @@ const target = env.ASPNETCORE_HTTPS_PORT ? `https://localhost:${env.ASPNETCORE_H
 const PROXY_CONFIG = [
   {
     context: [
-      "/User",
+      "/User/login",
+    ],
+    target,
+    secure: false,
+    changeOrigin: true,
+  },
+  {
+    context: [
+      "/User/signup",
+    ],
+    target,
+    secure: false,
+    changeOrigin: true,
+  },
+  {
+
+    context: [
+      "/User/refresh-token",
     ],
     target,
     secure: false,

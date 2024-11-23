@@ -13,6 +13,7 @@ import { provideAnimationsAsync } from '@angular/platform-browser/animations/asy
 import {MatButtonModule} from '@angular/material/button';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { JwtModule } from "@auth0/angular-jwt";
+import * as CryptoJS from 'crypto-js';
 
 import { tokenInterceptor } from './token.interceptor';
 import { environment } from '../environments/environment';

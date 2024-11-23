@@ -6,11 +6,16 @@ import { RepoSearchComponent } from './repo-search/repo-search.component';
 import { authrizeGuard } from './authrize.guard';
 import { BookmarksComponent } from './bookmarks/bookmarks.component';
 import { LogoutComponent } from './logout/logout.component';
+import { RegisterComponent } from './register/register.component';
 
 const routes: Routes = [
   {
     path: '',
     component: LoginComponent,
+  },
+  {
+    path: 'signup',
+    component: RegisterComponent
   },
   {
     path: 'repo',

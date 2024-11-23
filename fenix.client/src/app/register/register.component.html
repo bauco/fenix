@@ -1,0 +1,65 @@
+<div class="center">
+
+    <div class="sign-up-form">
+        <form method="post" class="form-content" [formGroup]="signupForm">
+            <div class="form-heading">
+                <h1 class="display-4">Welcome</h1>
+                <p>Utilites Demo for Fenix!</p>
+            </div>
+            <div class="input-wrap">
+                <div class="input">
+                    <mat-form-field>
+
+                        <label class="form-label" for="email">User email</label>
+                        <input matInput class="form-control" formControlName="email" type="email" id="email" name="email" placeholder=" " required autocomplete="email" />
+                        @if(signupForm.controls.email.hasError('required')){
+                        <mat-error>* Email is required.</mat-error>
+                        }
+                        @if(signupForm.controls.email.hasError('email')){
+                        <mat-error>* Valid email is required.</mat-error>
+                        }
+                    </mat-form-field>
+                </div>
+                <div class="input">
+                    <mat-form-field>
+                        <label class="form-label" for="Password">Password</label>
+                        <input matInput title="Must contain at least one number and one uppercase and lowercase letter, and at least 8 or more characters" formControlName="password" class="form-control" [type]="showPassword ? 'text' : 'password'" id="Password" name="Password" placeholder=" " pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}" autocomplete="current-password" />
+                        <button type="button" matSuffix mat-icon-button
+                                class="toggle-password"
+                                (click)="showPassword = !showPassword"
+                                [attr.aria-label]="showPassword ? 'Hide password' : 'Show password'">
+                            <span class="material-icons">{{ showPassword ? 'visibility_off' : 'visibility' }}</span>
+                        </button>
+                        @if(signupForm.get('password')?.hasError('required')){
+                        <mat-error>* Password is required.</mat-error>
+                        }
+                        @if(signupForm.get('password')?.hasError('pattern')){
+                        <mat-error>Password is weak (at least 1 upper/lower case, number, symbol, length 8+)</mat-error>
+                        }
+                    </mat-form-field>
+                </div>
+                <div class="input">
+                    <mat-form-field>
+
+                        <label class="form-label" for="confirmPassword">Confirm Password</label>
+                        <input matInput title="confirmPassword" formControlName="confirmPassword" class="form-control" [type]="showPassword ? 'text' : 'password'" id="confirmPassword" name="confirmPassword" placeholder=" " required autocomplete="" />
+                        <button matSuffix mat-icon-button type="button"
+                                class="toggle-password"
+                                (click)="showPassword = !showPassword"
+                                [attr.aria-label]="showPassword ? 'Hide password' : 'Show password'">
+                            <span class="material-icons">{{ showPassword ? 'visibility_off' : 'visibility' }}</span>
+                        </button>
+                        @if(signupForm.get('confirmPassword')?.hasError('required')){
+                        <mat-error>* Password is required.</mat-error>
+                        }
+                    </mat-form-field>
+                </div>
+            </div>
+            @if(signupForm.errors){
+            <div appServerResponseErrors [appFormControlErrors]="signupForm!">
+            </div>
+            }
+            <button mat-button type="button" (click)="onSubmit()" [disabled]="signupForm.invalid ">sign Up</button>
+        </form>
+    </div>
+</div>

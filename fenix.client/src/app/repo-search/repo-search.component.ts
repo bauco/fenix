@@ -7,6 +7,7 @@ import { MatInputModule } from '@angular/material/input';
 import { MatPaginator, MatPaginatorModule, PageEvent } from '@angular/material/paginator';
 import { ApiService } from '../services/api.service';
 import { ActivatedRoute, NavigationExtras, Router } from '@angular/router';
+import { IBookmark, IRepository } from '../DTO';
 
 @Component({
   selector: 'app-repo-search',
@@ -56,26 +57,30 @@ export class RepoSearchComponent implements OnInit {
     }>(`/Search?&query=${this.searchQuery}&page=${this.pageIndex + 1}&per_page=${this.pageSize}`)
       .subscribe({
         next: (result) => {
-          console.log(result);
-          this.length = result.total_count
-          this.repositories = result.items;
-          // Update the URL with the search query
-          const navigationExtras: NavigationExtras = {
-            queryParams: { q: this.searchQuery },
-            queryParamsHandling: 'merge' // This will preserve existing query parameters
-          };
-          this.router.navigate([], navigationExtras);
+          if (result.success) {
+            console.log(result);
+            this.length = result.data?.total_count ?? 0;
+            this.repositories = result.data?.items;
+            // Update the URL with the search query
+            const navigationExtras: NavigationExtras = {
+              queryParams: { q: this.searchQuery },
+              queryParamsHandling: 'merge' // This will preserve existing query parameters
+            };
+            this.router.navigate([], navigationExtras);
+          }
         },
         error: (error) => {
           console.error(error.message);
         }
     });
   }
-      
-  bookmark(repo: any) {
-    return this.http.post<any[]>(`/Bookmark`, repo).subscribe({
+
+  bookmark(repo: IRepository) {
+    return this.http.post<IRepository, IRepository[]>(`/Bookmark`, repo).subscribe({
       next: (result) => {
-        this.bookmarks = result
+        if (result.success) {
+          this.bookmarks = result.data ?? [];
+        }
       },
       error: (error) => {
         console.error(error.message);
@@ -84,10 +89,12 @@ export class RepoSearchComponent implements OnInit {
   }
 
   getBookmarks() {
-    this.http.get<any[]>(`/Bookmark`)
+    this.http.get<IRepository[]>(`/Bookmark`)
       .subscribe({
         next: (result) => {
-          this.bookmarks = result;
+          if (result.success) {
+            this.bookmarks = result.data ?? [];
+          }
         },
         error: (error) => {
           console.error(error.message);

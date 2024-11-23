@@ -6,6 +6,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatPaginator, MatPaginatorModule, PageEvent } from '@angular/material/paginator';
 import { ApiService } from '../services/api.service';
+import { IApiResponse, IBookmark, IRepository } from '../DTO';
 
 @Component({
   selector: 'bookmarks-search',
@@ -20,8 +21,9 @@ import { ApiService } from '../services/api.service';
     MatButtonModule]
 })
 export class BookmarksComponent implements OnInit {
+
   private http = inject(ApiService);
-  repositories: any = [];
+  repositories: IRepository[] = [];
   searchQuery: string = '';
   paginator = viewChild(MatPaginator);
   length = 0;
@@ -35,16 +37,14 @@ export class BookmarksComponent implements OnInit {
   disabled = false;
 
   ngOnInit() {
-       this.http.get<{
-      incomplete_results: boolean;
-      items: any[];
-      total_count: number;
-    }>(`/Bookmark`)
+    this.http.get<IRepository[]>(`/Bookmark`)
       .subscribe({
         next: (result) => {
           console.log(result);
-          this.repositories = result;
-          this.length = this.repositories.length
+          if (result.success) {
+            this.repositories = result.data ?? [];
+            this.length = this.repositories.length
+          }
         },
         error: (error) => {
           console.error(error.message);
@@ -52,15 +52,17 @@ export class BookmarksComponent implements OnInit {
     });
   }
   search() {
-    this.http.get<any[]>(`/Bookmark`)
+    this.http.get<IRepository[]>(`/Bookmark`)
       .subscribe({
         next: (result) => {
-          console.log(result);
-          if (this.searchQuery.length > 0) {
+          if (result.success) {
+            console.log(result.data);
+            if (this.searchQuery.length > 0) {
+              this.repositories = result.data?.filter(value => value.full_name === this.searchQuery) ?? [];
+            } else {
+              this.repositories = result.data ?? [];
+            }
 
-            this.repositories = result.filter(value => value.full_name === this.searchQuery);
-          } else {
-            this.repositories = result;
           }
 
         },
@@ -71,25 +73,36 @@ export class BookmarksComponent implements OnInit {
   }
       
   bookmark(repo: any) {
-    return this.http.post<any[]>(`/Bookmark`, repo).subscribe({
-      next: (result : any[]) => {
+    return this.http.post<IRepository, IRepository[]>(`/Bookmark`, repo).subscribe({
+      next: (result: IApiResponse<IRepository[]> | undefined) => {
+        if (result?.success)
         if (this.searchQuery.length > 0) {
 
-          this.repositories = result.filter(value => value.full_name === this.searchQuery);
+          this.repositories = result.data?.filter(value => value.full_name === this.searchQuery) ?? [];
         } else {
-          this.repositories = result;
-        }
+          this.repositories = result.data ?? [];
+          }
       },
       error: (error) => {
         console.error(error.message);
+      },
+      complete() {
+
       }
     });
   }
 
   getBookmarks() {
-    return this.http.get(`/Bookmark`).subscribe({
+    return this.http.get<IRepository[]>(`/Bookmark`).subscribe({
       next: (result) => {
         console.log(result);
+        if (result?.success)
+          if (this.searchQuery.length > 0) {
+
+            this.repositories = result.data?.filter(value => value.full_name === this.searchQuery) ?? [];
+          } else {
+            this.repositories = result.data ?? [];
+          }
       },
       error: (error) => {
         console.error(error.message);

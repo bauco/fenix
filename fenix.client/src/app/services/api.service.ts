@@ -1,6 +1,7 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { catchError, map, Observable, throwError } from 'rxjs';
+import { IApiResponse } from '../DTO';
 
 
 
@@ -24,8 +25,8 @@ export class ApiService {
     'Accept': 'text/plain',
   });
   constructor() { }
-  post<T>(url: string, data: any): Observable<T> {
-    return this.http.post<any>( url, data, { observe:'response', headers: this.headers.append('Allow-control-methods', 'POST') }).pipe(
+  post<T,R>(url: string, data: T): Observable<IApiResponse<R>> {
+    return this.http.post<T>( url, data, { observe:'response', headers: this.headers.append('Allow-control-methods', 'POST') }).pipe(
       map((response: any) => {
         if(response.status === 200){
           return response.body;
@@ -40,7 +41,7 @@ export class ApiService {
     );
   }
 
-  get<T>(url: string, workStation?: string | undefined): Observable<T> {
+  get<T>(url: string): Observable<IApiResponse<T>> {
     return this.http.get<any>( url, { observe:'response', headers: this.headers.append('Allow-control-methods', 'GET') }).pipe(
       map((response: any) => {
         return response.body
@@ -51,4 +52,16 @@ export class ApiService {
       })
     );
   }
+  put<T,R>(url: string, data: T): Observable<IApiResponse<R>> {
+    return this.http.put<any>(url,data, { observe: 'response', headers: this.headers.append('Allow-control-methods', 'PUT') }).pipe(
+      map((response: any) => {
+        return response.body
+      }),
+      catchError((error: any) => {
+        console.error(error);
+        return throwError(() => error);
+      })
+    );
+  }
+
 }

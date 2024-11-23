@@ -1,10 +1,38 @@
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using Microsoft.EntityFrameworkCore;
 using System.Text;
+using static fenix.Server.DTO;
 
 var builder = WebApplication.CreateBuilder(args);
-
 // Add services to the container.
+builder.Services.AddDbContext<UserDbContext>(options =>
+{
+#if DEBUG
+    options.UseSqlite("Data Source=UserDb_Local.db"); // SQLite for debugging
+#else
+    options.UseSqlServer(builder.Configuration.GetConnectionString("FenixConnection")); // SQL Server for production
+#endif
+});
+
+builder.Services.AddDbContext<BookmarkDbContext>(options =>
+{
+#if DEBUG
+    options.UseSqlite("Data Source=BookmarkDb_Local.db"); // SQLite for debugging
+#else
+    options.UseSqlServer(builder.Configuration.GetConnectionString("FenixConnection")); // SQL Server for production
+#endif
+});
+
+builder.Services.AddDbContext<RepositoryDbContext>(options =>
+{
+#if DEBUG
+    options.UseSqlite("Data Source=RepositoryDb_Local.db"); // SQLite for debugging
+#else
+    options.UseSqlServer(builder.Configuration.GetConnectionString("FenixConnection")); // SQL Server for production
+#endif
+});
+
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(option =>
@@ -37,12 +65,14 @@ builder.Services.AddSwaggerGen(option =>
 builder.Services.AddHttpClient();
 builder.Services.AddSession(options =>
 {
-    options.IdleTimeout = TimeSpan.FromMinutes(30); // Session timeout duration
+    options.IdleTimeout = TimeSpan.FromMinutes(30);
     options.Cookie.HttpOnly = true;
     options.Cookie.IsEssential = true;
 });
 builder.Services.AddMemoryCache();
 builder.Services.AddDistributedMemoryCache();
+builder.Configuration.AddEnvironmentVariables();
+
 builder.Services.AddAuthentication("Bearer")
     .AddJwtBearer(options =>
     {
@@ -60,6 +90,14 @@ builder.Services.AddAuthentication("Bearer")
     }
 );
 builder.Services.AddAuthorization();
+builder.Services.AddDbContext<BookmarkDbContext>(options =>
+{
+#if DEBUG
+    options.UseSqlite("Data Source=local.db");
+#else
+    options.UseSqlServer(builder.Configuration.GetConnectionString("FenixConnection")));
+#endif
+});
 
 var app = builder.Build();
 

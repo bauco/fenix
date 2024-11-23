@@ -1,36 +1,51 @@
 <div class="center">
   <div class="sign-in-form">
-    <form method="post" class="form-content" [formGroup]="loginForm">
-      <div class="form-heading">
-        <h1 class="display-4">Welcome</h1>
-        <p>Utilites Demo for Fenix!</p>
-      </div>
-      <div class="input-wrap">
-        <div class="input">
-          <input class="form-control" formControlName="email" type="email" id="email" name="email" placeholder=" " required autocomplete="email" />
-          <div class="label">
-            <label class="form-label" for="email">User email</label>
+      <form method="post" class="form-content" [formGroup]="loginForm">
+          <div class="form-heading">
+              <h1 class="display-4">Welcome</h1>
+              <p>Utilites Demo for Fenix!</p>
           </div>
-          @if(loginForm.controls.email.hasError('required')){
-            <mat-error>* Email is required.</mat-error>
+          <div class="input-wrap">
+              <div class="input">
+                  <mat-form-field>
+                      <label class="form-label" for="email">User email</label>
+                      <input matInput class="form-control" formControlName="email" type="email" id="email" name="email" placeholder=" " required autocomplete="email" />
+                      @if(loginForm.controls.email.hasError('required')){
+                      <mat-error>* Email is required.</mat-error>
+                      }
+                      @if(loginForm.controls.email.hasError('email')){
+                      <mat-error>* Valid email is required.</mat-error>
+                      }
+                  </mat-form-field>  
+              </div>
+              <div class="input">
+                  <mat-form-field>
+
+                      <label class="form-label" for="Password">Password</label>
+                      <input matInput title="password" formControlName="password" class="form-control" [type]="showPassword ? 'text' : 'password'" id="Password" name="Password" placeholder=" " required autocomplete="current-password" />
+                      <button type="button" matSuffix mat-icon-button
+                              class="toggle-password"
+                              (click)="showPassword = !showPassword"
+                              [attr.aria-label]="showPassword ? 'Hide password' : 'Show password'">
+                          <span class="material-icons">{{ showPassword ? 'visibility_off' : 'visibility' }}</span>
+                      </button>
+                      @if(loginForm.get('password')?.hasError('required')){
+                      <mat-error>* Password is required.</mat-error>
+                      }
+                    </mat-form-field>
+              </div>
+          </div>
+          @if(loginForm.errors){
+          <div appServerResponseErrors [appFormControlErrors]="loginForm!">
+          </div>
           }
-          @if(loginForm.controls.email.hasError('email')){
-            <mat-error>* Valid email is required.</mat-error>
-          }
-        </div>
-        <div class="input">
-          <label class="form-label" for="Password">Password</label>
-          <input title="password" formControlName="password" class="form-control" type="password" id="Password" name="Password" placeholder=" " required autocomplete="current-password" />
-          @if(loginForm.get('password')?.hasError('required')){
-          <mat-error>* Password is required.</mat-error>
-          }
-        </div>
-      </div>
-      @if(loginForm.errors){
-      <div appServerResponseErrors [appFormControlErrors]="loginForm!">
-      </div>
-      }
-      <button mat-button type="button" (click)="onSubmit()" [disabled]="loginForm.invalid || !loginForm.dirty">Log in</button>
-    </form>
+          <button mat-button type="button" (click)="onSubmit()" [disabled]="loginForm.invalid || !loginForm.dirty">Log in</button>
+          <a [routerLink]="['/signup']">
+              <button mat-button type="button">
+                  Sign Up
+              </button>
+          </a>
+
+      </form>
   </div>
 </div>

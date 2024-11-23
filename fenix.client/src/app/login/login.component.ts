@@ -1,17 +1,20 @@
 import { Component, inject, OnInit, DestroyRef } from '@angular/core';
 import { AuthService } from '../services/auth.service';
 import { Router, RouterModule } from '@angular/router';
-import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ServerResponseErrorsDirective } from '../Directives/server-response-errors.directive';
-import { MatError } from '@angular/material/form-field';
+import { MatError, MatFormFieldModule } from '@angular/material/form-field';
 import { APIErrors, ILogInRequest } from '../DTO';
+import { MatButtonModule } from '@angular/material/button';
+import { MatIconModule } from '@angular/material/icon';
+import { MatInputModule } from '@angular/material/input';
 
 @Component({
   selector: 'app-login',
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.scss'],
   standalone: true,
-  imports: [ReactiveFormsModule, RouterModule, ServerResponseErrorsDirective, MatError]
+  imports: [ ReactiveFormsModule, RouterModule, ServerResponseErrorsDirective, MatError, MatFormFieldModule, MatInputModule, FormsModule, MatButtonModule, MatIconModule]
 })
 export class LoginComponent implements OnInit {
   private router = inject(Router);
@@ -23,7 +26,7 @@ export class LoginComponent implements OnInit {
     email: new FormControl('', [Validators.required, Validators.email]),
     password: new FormControl('', [Validators.required])
   });
-
+  public showPassword: boolean = false;
   constructor() {
   }
   ngOnInit(): void {

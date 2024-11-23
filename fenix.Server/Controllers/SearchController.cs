@@ -36,29 +36,47 @@ namespace fenix.Server.Controllers
             }
             if (string.IsNullOrWhiteSpace(per_page) || int.Parse(per_page) > 1000)
             {
-                return BadRequest(new
+                ServerResponse<GitHubResponse> res = new()
                 {
-                    message = "Parameter 'per_page' must be less than or equal to 1000.",
-                    status = 400
-                });
+                    Success = false,
+                    Hash = Guid.NewGuid(),
+                    Errors = [
+                        new ErrorMessage(){
+                            Code = 400,
+                            Message="Parameter 'per_page' must be less than or equal to 1000.",
+                        }
+                    ]
+                };
+                return BadRequest(res);
             }
             try
             {
                 // get next page for faster result from cache 
                 _ = FetchGitHubPageAsync(query, int.Parse(page) + 1, int.Parse(per_page));
                 GitHubResponse response = await FetchGitHubPageAsync(query, int.Parse(page), int.Parse(per_page));
-                
-                return Ok(response);
+                ServerResponse<GitHubResponse> res = new()
+                {
+                    Success = true,
+                    Hash = Guid.NewGuid(),
+                    Data = response
+                };
+                return Ok(res);
             }
             catch (Exception ex)
             {
-                _logger.LogError("An unexpected error occurred.");
-                return StatusCode(500, new
+                ServerResponse<GitHubResponse> res = new()
                 {
-                    message = "An unexpected error occurred.",
-                    details = ex.Message,
-                    status = 500
-                });
+                    Success = false,
+                    Hash = Guid.NewGuid(),
+                    Errors = [
+                        new ErrorMessage(){
+                            Code = 500,
+                            Message="An unexpected error occurred.",
+                        }
+                    ]
+                };
+                _logger.LogError("An unexpected error occurred.");
+                return BadRequest(res);
             }
         }
 

@@ -1,4 +1,4 @@
-.sign-in-form {
+.sign-up-form {
   display: flex;
   flex-direction: column;
   max-width: 900px;
@@ -18,7 +18,6 @@
 .form-heading {
   text-align: center;
   margin-bottom: 32px;
-
 }
 
 .input-wrap {
@@ -29,16 +28,17 @@
   .sign-in-form {
     flex-direction: row;
   }
-h1 {
-  font-size: 32px;
-  font-weight: 500;
+
+  h1 {
+    font-size: 32px;
+    font-weight: 500;
+  }
+
+  p {
+    font-size: 16px;
+  }
 }
 
-p {
-  font-size: 16px;
-}
-
-}
 .center {
   display: flex;
   justify-content: center;
